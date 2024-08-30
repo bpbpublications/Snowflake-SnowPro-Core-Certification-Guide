@@ -1,0 +1,101 @@
+
+--Syntax:
+create or replace table <table_name> (
+    <col1_name> <col1_type>
+    -- , <col2_name> <col2_type>
+    -- supported types: https://docs.snowflake.com/en/sql-reference/intro-summary-data-types
+    )
+    -- comment = '<comment>';
+
+-- Sample Syntax/Code for creating Table
+create or replace table CUSTOMERS (
+    id INT NOT NULL,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-------------------------------------- ************************************* -----------------------------------------------
+--Syntax:
+ALTER TABLE [ IF EXISTS ] ADD [ COLUMN ] [ IF NOT EXISTS ] <col_name> <col_data_type>;
+ALTER TABLE [ IF EXISTS ] <name> RENAME TO <new_table_name>;
+
+-- Sample Syntax/Code for adding a new column to the existing Table:
+ALTER TABLE CUSTOMERS ADD COLUMN city VARCHAR(255), STATE VARCHAR(255), ZIP NUMBER ;
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code  to View COLUMNS in a table:
+SHOW COLUMNS IN CUSTOMERS;
+
+-- Alternate method to View COLUMNS in a table:
+SHOW COLUMNS IN TABLE CUSTOMERS;
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code  for creating Temporary Table:
+CREATE TEMPORARY TABLE mysnowtemptable (id NUMBER, creation_date DATE);
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code  for creating Transient Table:
+CREATE TRANSIENT TABLE mysnowtranstable (id NUMBER, creation_date DATE);
+
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code for creating external Table:
+CREATE OR REPLACE EXTERNAL TABLE mysnow_externaltable
+(
+  column1_name data_type,
+  column2_name data_type,
+  ...
+)
+WITH LOCATION = @my_external_stage
+FILE_FORMAT = (FORMAT_NAME = my_file_format)
+AUTO_REFRESH = TRUE; -- Optional: set to TRUE if you want Snowflake to automatically refresh the metadata for the external table
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code to query external Table:
+SELECT * FROM mysnow_externaltable;
+
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code for creating view
+create or replace view my_view as 
+SELECT * FROM CUSTOMERS where STATE in ('TX')
+;
+
+-- Sample Syntax/Code to query the View:
+SELECT * FROM my_view;
+
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code to create Stored Procedure:
+CREATE OR REPLACE PROCEDURE return_greater_number(number_1 INTEGER, number_2 INTEGER)
+RETURNS INTEGER NOT NULL
+LANGUAGE SQL
+AS
+$$
+BEGIN
+  IF (number_1 > number_2) THEN
+    RETURN number_1;
+  ELSE
+    RETURN number_2;
+  END IF;
+END;
+$$
+;
+
+
+-- Sample Syntax/Code to execute/calling the Stored Procedure:
+CALL return_greater_number(100, 500);
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code to create SQL UDF:
+CREATE OR REPLACE FUNCTION convert_uppercase (input VARCHAR) 
+RETURNS VARCHAR 
+AS 
+$$
+  SELECT UPPER(input)
+$$
+;
+
+-- Sample Syntax/Code to call the UDF:
+SELECT convert_uppercase('Joe');

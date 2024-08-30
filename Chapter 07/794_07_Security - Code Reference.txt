@@ -1,0 +1,5 @@
+-- Sample Syntax/Code to query ACCESS_HISTORY view
+
+SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.ACCESS_HISTORY
+WHERE user_name like 'BK%'
+;

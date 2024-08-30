@@ -1,0 +1,54 @@
+-- Sample Syntax/Code for creating the base table 
+create or replace table sales_table (
+    sale_date DATE,
+    region VARCHAR(255),
+    item VARCHAR(255),
+    quantity NUMBER,
+    sales NUMBER(36,2)
+);
+
+-- Sample Syntax/Code to Create Dynamic table based on the underlying sales data  
+CREATE OR REPLACE DYNAMIC TABLE sales_summary (region, total_sales)
+  TARGET_LAG = '10 minutes'
+-- The target lag time is 10 minutes, which means that the data in the dynamic table should ideally be no more than 10 minutes older than the data in sales_table
+    WAREHOUSE = compute_wh
+    AS
+     SELECT region, sum(sales) as total_sales
+       FROM sales_table
+       Group by region;
+
+
+-- Sample Syntax/Code to query the dynamic table 
+Select * from sales_summary;
+
+
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code for creating iceberg table using Snowlfake Catalog
+
+CREATE OR REPLACE ICEBERG TABLE customer_iceberg
+(
+customer_id INT NOT NULL,
+  name STRING,
+  city STRING
+)
+  CATALOG = 'SNOWFLAKE'
+  EXTERNAL_VOLUME = 'my_external_volume'
+  BASE_LOCATION = 'my/relative/path/from/external_volume';
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code for creating iceberg table using AWS Glue as the Catalog
+
+CREATE ICEBERG TABLE inventory_iceberg
+  EXTERNAL_VOLUME='glue_catalog_volume'
+  CATALOG='glue_catalog_integration'
+  CATALOG_TABLE_NAME='my_glue_catalog_table'
+  CATALOG_NAMESPACE='icebergcatalogdb2';
+
+-------------------------------------- ************************************* -----------------------------------------------
+-- Sample Syntax/Code for creating iceberg table using object storage
+CREATE ICEBERG TABLE sales_iceberg
+  EXTERNAL_VOLUME='icebergMetadataVolume'
+  CATALOG='icebergCatalogInt'
+  METADATA_FILE_PATH='path/to/metadata/v1.metadata.json';
+
