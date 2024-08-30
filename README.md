@@ -1,2 +1,2 @@
-# Snowflake SnowPro Core Certification Guide
- Snowflake SnowPro Core Certification Guide, by BPB Publications
+# Snowflake SnowPro Core Certification Guide COF-C02
+ Snowflake SnowPro Core Certification Guide COF-C02, by BPB Publications
